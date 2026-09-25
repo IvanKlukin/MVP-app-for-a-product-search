@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background_light">
+
+    <!-- Верхняя панель поиска и перехода -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:background="@color/card_bg">
+
+        <EditText
+            android:id="@+id/etSearchQuery"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:hint="@string/hint_search_product"
+            android:inputType="text"
+            android:imeOptions="actionSearch"
+            android:singleLine="true"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textSize="14sp"
+            android:background="@android:drawable/editbox_background_normal" />
+
+        <Button
+            android:id="@+id/btnGoShoppingList"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:text="@string/btn_shopping_list"
+            android:textSize="12sp"
+            android:layout_marginLeft="6dp" />
+    </LinearLayout>
+
+    <!-- Информационная плашка выбранного товара/раздела -->
+    <LinearLayout
+        android:id="@+id/layoutSearchResultInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:background="#E3F2FD">
+
+        <TextView
+            android:id="@+id/tvSearchStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/search_prompt"
+            android:textSize="13sp"
+            android:textColor="@color/text_primary" />
+    </LinearLayout>
+
+    <!-- Список подсказок по первым буквам (скрывается или сжимается) -->
+    <ListView
+        android:id="@+id/lvSuggestions"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:background="@color/card_bg"
+        android:divider="@color/divider"
+        android:dividerHeight="1dp"
+        android:visibility="gone" />
+
+    <!-- Схема магазина с выделением найденного раздела -->
+    <ru.study.storesearch.ui.view.StoreMapView
+        android:id="@+id/storeMapViewSearch"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+</LinearLayout>
