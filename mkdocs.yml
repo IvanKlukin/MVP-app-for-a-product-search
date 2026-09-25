@@ -1,0 +1,15 @@
+site_name: Документация MVP поиска товара в магазине
+site_description: Руководство пользователя и разработчика мобильного приложения навигации по магазину
+docs_dir: docs
+site_dir: site
+
+nav:
+  - Главная: index.md
+  - Установка и сборка: installation.md
+  - Руководство оператора: operator-guide.md
+  - Руководство покупателя: customer-guide.md
+  - Тестирование и QA: testing.md
+  - Ограничения и архитектура: limitations.md
+
+theme:
+  name: readthedocs
