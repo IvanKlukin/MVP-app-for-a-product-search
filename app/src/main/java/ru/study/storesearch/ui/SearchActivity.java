@@ -108,6 +108,12 @@ public class SearchActivity extends Activity {
         });
 
         loadStoreMap();
+
+        String queryExtra = getIntent().getStringExtra("query");
+        if (queryExtra != null && !queryExtra.trim().isEmpty()) {
+            etSearchQuery.setText(queryExtra);
+            performSearch(queryExtra);
+        }
     }
 
     @Override

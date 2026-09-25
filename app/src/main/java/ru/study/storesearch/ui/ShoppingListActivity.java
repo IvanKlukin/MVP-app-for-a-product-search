@@ -76,6 +76,12 @@ public class ShoppingListActivity extends Activity {
                 processShoppingList();
             }
         });
+
+        String listExtra = getIntent().getStringExtra("shopping_list");
+        if (listExtra != null && !listExtra.trim().isEmpty()) {
+            etShoppingListInput.setText(listExtra);
+            processShoppingList();
+        }
     }
 
     @Override

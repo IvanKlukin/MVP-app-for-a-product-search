@@ -21,27 +21,27 @@
         <!-- Экран оператора: схема и метки разделов -->
         <activity
             android:name=".ui.OperatorActivity"
-            android:exported="false"
+            android:exported="true"
             android:label="@string/title_operator" />
 
         <!-- Экран оператора: пакетный импорт товаров -->
         <activity
             android:name=".ui.ProductImportActivity"
-            android:exported="false"
+            android:exported="true"
             android:label="@string/title_import"
             android:windowSoftInputMode="adjustResize" />
 
         <!-- Экран покупателя: поиск товаров и подсветка метки -->
         <activity
             android:name=".ui.SearchActivity"
-            android:exported="false"
+            android:exported="true"
             android:label="@string/title_search"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <!-- Экран покупателя: разбор списка покупок из буфера -->
         <activity
             android:name=".ui.ShoppingListActivity"
-            android:exported="false"
+            android:exported="true"
             android:label="@string/title_shopping_list"
             android:windowSoftInputMode="adjustResize" />
 
