@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background_light">
+
+    <!-- Подсказка оператору -->
+    <TextView
+        android:id="@+id/tvOperatorHint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary"
+        android:textColor="#FFFFFF"
+        android:textSize="13sp"
+        android:padding="8dp"
+        android:gravity="center"
+        android:text="@string/operator_hint" />
+
+    <!-- Кастомное интерактивное поле схемы магазина -->
+    <ru.study.storesearch.ui.view.StoreMapView
+        android:id="@+id/storeMapView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- Панель управления оператора -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:background="@color/card_bg">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="4dp">
+
+            <Button
+                android:id="@+id/btnChooseMap"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:text="@string/btn_choose_map"
+                android:textSize="12sp"
+                android:layout_marginRight="4dp" />
+
+            <Button
+                android:id="@+id/btnResetMap"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:text="@string/btn_reset_map"
+                android:textSize="12sp"
+                android:layout_marginLeft="4dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnSectionsList"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:text="@string/btn_sections_list"
+                android:textSize="12sp"
+                android:layout_marginRight="4dp" />
+
+            <Button
+                android:id="@+id/btnGoImport"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:text="@string/btn_go_import"
+                android:textSize="12sp"
+                android:layout_marginLeft="4dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

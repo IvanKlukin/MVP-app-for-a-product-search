@@ -1,4 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Поиск товаров</string>
+    <string name="app_name">Поиск товаров в магазине</string>
+    <string name="app_subtitle">MVP системы навигации покупателя по торговому залу</string>
+
+    <!-- Главный экран -->
+    <string name="role_operator">Оператор магазина</string>
+    <string name="role_customer">Покупатель</string>
+    <string name="btn_demo_data">Загрузить демо-данные</string>
+    <string name="btn_clear_data">Очистить данные</string>
+    <string name="db_status_format">В базе данных: разделов — %1$d, товаров — %2$d</string>
+    <string name="demo_loaded_success">Демонстрационные данные успешно загружены (%1$d товаров)</string>
+    <string name="data_cleared_success">База данных успешно очищена</string>
+    <string name="confirm_clear_data">Вы действительно хотите удалить все разделы и товары?</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="cancel">Отмена</string>
+    <string name="save">Сохранить</string>
+    <string name="delete">Удалить</string>
+    <string name="close">Закрыть</string>
+
+    <!-- Экран оператора -->
+    <string name="title_operator">Режим оператора</string>
+    <string name="operator_hint">Нажмите на схему магазина, чтобы поставить метку нового раздела</string>
+    <string name="btn_choose_map">Выбрать схему</string>
+    <string name="btn_reset_map">Сбросить схему</string>
+    <string name="btn_sections_list">Список разделов</string>
+    <string name="btn_go_import">Импорт товаров</string>
+    <string name="dialog_new_section_title">Новый раздел</string>
+    <string name="dialog_new_section_message">Введите название раздела для метки (%1$d%%, %2$d%%):</string>
+    <string name="hint_section_name">Название раздела (например, Овощи)</string>
+    <string name="error_empty_section_name">Название раздела не может быть пустым</string>
+    <string name="error_duplicate_section_name">Раздел с таким названием уже существует</string>
+    <string name="section_added_success">Раздел «%1$s» успешно добавлен</string>
+    <string name="section_deleted_success">Раздел «%1$s» удален</string>
+    <string name="confirm_delete_section">Удалить раздел «%1$s» и связанные с ним товары?</string>
+    <string name="map_saved_success">Схема магазина успешно сохранена</string>
+    <string name="map_reset_success">Установлена стандартная схема магазина</string>
+    <string name="no_sections_yet">Разделы ещё не добавлены</string>
+
+    <!-- Экран импорта -->
+    <string name="title_import">Импорт товаров</string>
+    <string name="import_format_desc">Формат строк импорта:\nНазвание товара;Название раздела\nПример: Молоко;Молочные продукты</string>
+    <string name="btn_choose_file">Выбрать файл (.txt / .csv)</string>
+    <string name="btn_paste_manual">Вставить пример</string>
+    <string name="btn_run_import">Импортировать товары</string>
+    <string name="hint_import_text">Вставьте строки формата «Товар;Раздел» вручную или выберите файл...</string>
+    <string name="import_stats_format">Итог импорта: добавлено/обновлено: %1$d, пропущено с ошибками: %2$d</string>
+    <string name="error_no_import_data">Введите текст для импорта или выберите файл</string>
+    <string name="error_file_read">Не удалось прочитать выбранный файл</string>
+    <string name="error_unknown_section">Раздел «%1$s» не найден в магазине (строка %2$d)</string>
+
+    <!-- Экран поиска покупателя -->
+    <string name="title_search">Поиск товара</string>
+    <string name="hint_search_product">Введите название товара (от 1 буквы)...</string>
+    <string name="btn_shopping_list">Список покупок</string>
+    <string name="label_found_section">Раздел:</string>
+    <string name="product_not_found">Товар не найден в каталоге магазина</string>
+    <string name="search_prompt">Начните вводить название товара для отображения подсказок и расположения на схеме</string>
+    <string name="select_product_to_view">Выберите товар из списка, чтобы увидеть его раздел на схеме</string>
+
+    <!-- Экран списка покупок -->
+    <string name="title_shopping_list">Список покупок</string>
+    <string name="hint_shopping_list">Вставьте или введите список товаров (каждый с новой строки):</string>
+    <string name="btn_paste_clipboard">Вставить из буфера</string>
+    <string name="btn_process_shopping_list">Найти товары</string>
+    <string name="status_not_found">Не найден</string>
+    <string name="clipboard_empty">Буфер обмена пуст или не содержит текста</string>
+    <string name="shopping_list_empty">Введите хотя бы одно название товара</string>
+    <string name="shopping_summary_format">Обработано позиций: %1$d (найдено: %2$d, не найдено: %3$d)</string>
 </resources>
