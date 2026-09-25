@@ -33,7 +33,8 @@
             android:layout_height="44dp"
             android:text="@string/btn_shopping_list"
             android:textSize="12sp"
-            android:layout_marginLeft="6dp" />
+            android:layout_marginLeft="6dp"
+            android:layout_marginStart="6dp" />
     </LinearLayout>
 
     <!-- Информационная плашка выбранного товара/раздела -->

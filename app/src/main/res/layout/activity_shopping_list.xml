@@ -27,6 +27,7 @@
             android:layout_height="110dp"
             android:gravity="top"
             android:inputType="textMultiLine"
+            android:hint="@string/hint_shopping_list_input"
             android:textSize="14sp"
             android:background="@android:drawable/editbox_background_normal"
             android:padding="8dp"
@@ -44,7 +45,8 @@
                 android:layout_weight="1"
                 android:text="@string/btn_paste_clipboard"
                 android:textSize="12sp"
-                android:layout_marginRight="4dp" />
+                android:layout_marginRight="4dp"
+                android:layout_marginEnd="4dp" />
 
             <Button
                 android:id="@+id/btnProcessList"
@@ -53,7 +55,8 @@
                 android:layout_weight="1"
                 android:text="@string/btn_process_shopping_list"
                 android:textSize="12sp"
-                android:layout_marginLeft="4dp" />
+                android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp" />
         </LinearLayout>
     </LinearLayout>
 

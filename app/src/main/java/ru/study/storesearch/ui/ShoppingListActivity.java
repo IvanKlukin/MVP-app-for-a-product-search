@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,7 +78,21 @@ public class ShoppingListActivity extends Activity {
             }
         });
 
+        allProducts = repository.getAllProducts();
+
         String listExtra = getIntent().getStringExtra("shopping_list");
+        if (listExtra != null && !listExtra.trim().isEmpty()) {
+            etShoppingListInput.setText(listExtra);
+            processShoppingList();
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        allProducts = repository.getAllProducts();
+        String listExtra = intent.getStringExtra("shopping_list");
         if (listExtra != null && !listExtra.trim().isEmpty()) {
             etShoppingListInput.setText(listExtra);
             processShoppingList();
@@ -110,7 +125,7 @@ public class ShoppingListActivity extends Activity {
         }
 
         etShoppingListInput.setText(clipText.toString());
-        Toast.makeText(this, "Список вставлен из буфера обмена", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.shopping_list_pasted, Toast.LENGTH_SHORT).show();
 
         // Автоматически запускаем поиск по вставленному списку
         processShoppingList();
@@ -169,10 +184,10 @@ public class ShoppingListActivity extends Activity {
                 tvName.setText(item.getCleanedQuery());
 
                 if (item.isFound()) {
-                    tvStatus.setText("Раздел: " + item.getSectionName());
+                    tvStatus.setText(getContext().getString(R.string.shopping_item_section, item.getSectionName()));
                     tvStatus.setTextColor(getContext().getResources().getColor(R.color.status_found));
                 } else {
-                    tvStatus.setText("Не найден");
+                    tvStatus.setText(R.string.status_not_found);
                     tvStatus.setTextColor(getContext().getResources().getColor(R.color.status_not_found));
                 }
             }

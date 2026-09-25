@@ -72,7 +72,29 @@ public class ProductImportActivity extends Activity {
                 executeImport();
             }
         });
+
+        handleIntent(getIntent());
     }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        if (intent == null) return;
+        String importText = intent.getStringExtra("import_text");
+        if (importText != null) {
+            etImportText.setText(importText);
+            if (intent.getBooleanExtra("auto_import", false)) {
+                executeImport();
+            }
+        }
+    }
+
+    private static final String TAG = "ProductImportActivity";
 
     private void chooseImportFile() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -81,7 +103,8 @@ public class ProductImportActivity extends Activity {
         try {
             startActivityForResult(Intent.createChooser(intent, getString(R.string.btn_choose_file)), REQUEST_PICK_FILE);
         } catch (Exception e) {
-            Toast.makeText(this, "Приложение для выбора файлов не найдено", Toast.LENGTH_SHORT).show();
+            android.util.Log.e(TAG, "File picker not available", e);
+            Toast.makeText(this, R.string.error_no_file_picker, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -104,16 +127,13 @@ public class ProductImportActivity extends Activity {
                 Toast.makeText(this, R.string.error_file_read, Toast.LENGTH_SHORT).show();
                 return;
             }
-            ProductImportParser.ParseResult result = importParser.parse(is);
-            // Воспроизводим исходный разобранный текст в поле ввода для предпросмотра
-            StringBuilder sb = new StringBuilder();
-            for (ProductImportParser.ParsedItem item : result.getItems()) {
-                sb.append(item.getProductName()).append(";").append(item.getSectionName()).append("\n");
-            }
-            etImportText.setText(sb.toString());
-            Toast.makeText(this, "Файл загружен. Проверьте данные и нажмите «Импортировать»", Toast.LENGTH_LONG).show();
+            // Считываем и отображаем исходный текст файла целиком (включая все строки и возможные ошибки)
+            String rawText = importParser.readRawText(is);
+            etImportText.setText(rawText);
+            Toast.makeText(this, R.string.import_file_loaded, Toast.LENGTH_LONG).show();
         } catch (Exception e) {
-            Toast.makeText(this, getString(R.string.error_file_read) + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            android.util.Log.e(TAG, "Error reading import file", e);
+            Toast.makeText(this, R.string.error_file_read, Toast.LENGTH_SHORT).show();
         } finally {
             try {
                 if (is != null) is.close();
@@ -151,10 +171,10 @@ public class ProductImportActivity extends Activity {
         int skippedCount = parseErrors.size();
         StringBuilder errorLog = new StringBuilder();
 
-        // 1. Ошибки синтаксиса строк
+        // 1. Ошибки синтаксиса строк (сохраняются с номерами строк и понятными сообщениями)
         for (ProductImportParser.ImportError err : parseErrors) {
-            errorLog.append("Строка ").append(err.getLineNumber())
-                    .append(": ").append(err.getMessage()).append("\n");
+            errorLog.append(getString(R.string.import_error_line_format, err.getLineNumber(), err.getMessage()))
+                    .append("\n");
         }
 
         // 2. Валидация разделов и сохранение товаров
@@ -171,8 +191,8 @@ public class ProductImportActivity extends Activity {
                     importedCount++;
                 } else {
                     skippedCount++;
-                    errorLog.append("Ошибка записи товара «").append(item.getProductName())
-                            .append("» (строка ").append(item.getLineNumber()).append(")\n");
+                    errorLog.append(getString(R.string.import_error_db_write_format, item.getProductName(), item.getLineNumber()))
+                            .append("\n");
                 }
             }
         }

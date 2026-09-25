@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,8 +13,11 @@ import java.util.List;
  * Парсер строк импорта товаров вида:
  * "Название товара;Название раздела"
  * Поддерживает UTF-8, UTF-8 с BOM, переводы строк \r\n и \n.
+ * Совместим с API 17 (использует Charset.forName("UTF-8")).
  */
 public class ProductImportParser {
+
+    private static final Charset UTF_8 = Charset.forName("UTF-8");
 
     public static class ParsedItem {
         private final int lineNumber;
@@ -97,6 +100,33 @@ public class ProductImportParser {
     }
 
     /**
+     * Считывает весь исходный текст из InputStream в кодировке UTF-8,
+     * сохраняя все строки (включая некорректные) для предпросмотра пользователю.
+     */
+    public String readRawText(InputStream inputStream) throws IOException {
+        if (inputStream == null) {
+            return "";
+        }
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, UTF_8));
+        StringBuilder sb = new StringBuilder();
+        String line;
+        boolean first = true;
+        while ((line = reader.readLine()) != null) {
+            if (first) {
+                // Если присутствует BOM, удаляем его из отображаемого текста
+                if (line.startsWith("\uFEFF")) {
+                    line = line.substring(1);
+                }
+                first = false;
+            } else {
+                sb.append("\n");
+            }
+            sb.append(line);
+        }
+        return sb.toString();
+    }
+
+    /**
      * Разбирает текст со списком товаров для импорта.
      */
     public ParseResult parse(String text) {
@@ -110,8 +140,9 @@ public class ProductImportParser {
             cleanText = cleanText.substring(1);
         }
 
-        // Разделение по стандартным переводам строк Windows (\r\n) и Unix (\n)
-        String[] lines = cleanText.split("\\r?\\n");
+        // Разделение по стандартным переводам строк Windows (\r\n) и Unix (\n), с поддержкой экранированных \n
+        String normalized = cleanText.contains("\n") ? cleanText : cleanText.replace("\\n", "\n");
+        String[] lines = normalized.split("\\r?\\n");
         List<ParsedItem> items = new ArrayList<>();
         List<ImportError> errors = new ArrayList<>();
 
@@ -125,10 +156,14 @@ public class ProductImportParser {
                 continue;
             }
 
-            // Разделение по точке с запятой
+            // Разделение по точке с запятой (требуется ровно два непустых поля: Товар;Отдел)
             String[] parts = trimmed.split(";", -1);
             if (parts.length < 2) {
-                errors.add(new ImportError(lineNumber, rawLine, "Отсутствует разделитель ';' (ожидается 'Товар;Раздел')"));
+                errors.add(new ImportError(lineNumber, rawLine, "Отсутствует разделитель ';' (ожидается ровно два поля 'Товар;Отдел')"));
+                continue;
+            }
+            if (parts.length > 2) {
+                errors.add(new ImportError(lineNumber, rawLine, "Лишние разделители ';' (найдено полей: " + parts.length + ", ожидается ровно два 'Товар;Отдел')"));
                 continue;
             }
 
@@ -153,15 +188,7 @@ public class ProductImportParser {
      * Считывает и разбирает содержимое InputStream в кодировке UTF-8.
      */
     public ParseResult parse(InputStream inputStream) throws IOException {
-        if (inputStream == null) {
-            return new ParseResult(Collections.<ParsedItem>emptyList(), Collections.<ImportError>emptyList(), 0);
-        }
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            sb.append(line).append("\n");
-        }
-        return parse(sb.toString());
+        String text = readRawText(inputStream);
+        return parse(text);
     }
 }

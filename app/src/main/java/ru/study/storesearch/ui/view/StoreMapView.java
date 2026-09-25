@@ -14,6 +14,7 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.study.storesearch.R;
 import ru.study.storesearch.data.model.Section;
 import ru.study.storesearch.domain.MapCoordinateMapper;
 
@@ -128,7 +129,7 @@ public class StoreMapView extends View {
             // Если изображение схемы не задано, рисуем нейтральную подсказку
             textPaint.setColor(Color.DKGRAY);
             textPaint.setTextSize(14f * density);
-            canvas.drawText("Схема магазина не загружена", viewW / 2.0f, viewH / 2.0f, textPaint);
+            canvas.drawText(getContext().getString(R.string.map_not_loaded), viewW / 2.0f, viewH / 2.0f, textPaint);
             return;
         }
 
@@ -231,6 +232,7 @@ public class StoreMapView extends View {
             case MotionEvent.ACTION_DOWN:
                 return true;
             case MotionEvent.ACTION_UP:
+                performClick();
                 float touchX = event.getX();
                 float touchY = event.getY();
                 int viewW = getWidth();
@@ -247,5 +249,10 @@ public class StoreMapView extends View {
                 break;
         }
         return super.onTouchEvent(event);
+    }
+
+    @Override
+    public boolean performClick() {
+        return super.performClick();
     }
 }

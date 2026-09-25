@@ -34,8 +34,9 @@ import ru.study.storesearch.ui.view.StoreMapView;
  */
 public class OperatorActivity extends Activity {
 
+    private static final String TAG = "OperatorActivity";
     private static final int REQUEST_PICK_MAP = 101;
-    private static final String CUSTOM_MAP_FILENAME = "custom_store_map.png";
+    private static final String CUSTOM_MAP_FILENAME = "custom_store_map.img";
 
     private StoreRepository repository;
     private StoreMapView storeMapView;
@@ -96,6 +97,25 @@ public class OperatorActivity extends Activity {
         });
 
         loadStoreMap();
+        handleIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        if (intent == null) return;
+        String addSectionName = intent.getStringExtra("add_section_name");
+        if (addSectionName != null && !addSectionName.trim().isEmpty()) {
+            float x = intent.getFloatExtra("add_section_x", 0.22f);
+            float y = intent.getFloatExtra("add_section_y", 0.38f);
+            repository.insertSection(addSectionName.trim(), x, y);
+            refreshSectionsOnMap();
+        }
     }
 
     @Override
@@ -147,7 +167,8 @@ public class OperatorActivity extends Activity {
         try {
             startActivityForResult(Intent.createChooser(intent, getString(R.string.btn_choose_map)), REQUEST_PICK_MAP);
         } catch (Exception e) {
-            Toast.makeText(this, "Приложение для выбора изображений не найдено", Toast.LENGTH_SHORT).show();
+            android.util.Log.e(TAG, "Image picker not available", e);
+            Toast.makeText(this, R.string.error_no_image_picker, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -164,7 +185,8 @@ public class OperatorActivity extends Activity {
 
     /**
      * Безопасное копирование выбранного пользователем файла во внутреннюю память приложения
-     * через ContentResolver.openInputStream. Гарантирует сохранение схемы при перезапусках приложения на API 17.
+     * через ContentResolver.openInputStream под нейтральным именем custom_store_map.img.
+     * Не привязывается к ложному расширению формата (PNG/JPEG) и сохраняет изображение для API 17.
      */
     private void copyMapImageToInternalStorage(Uri uri) {
         File internalFile = new File(getFilesDir(), CUSTOM_MAP_FILENAME);
@@ -173,7 +195,7 @@ public class OperatorActivity extends Activity {
         try {
             is = getContentResolver().openInputStream(uri);
             if (is == null) {
-                Toast.makeText(this, "Не удалось открыть выбранный файл", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.error_open_file, Toast.LENGTH_SHORT).show();
                 return;
             }
             os = new FileOutputStream(internalFile);
@@ -188,7 +210,8 @@ public class OperatorActivity extends Activity {
             loadStoreMap();
             Toast.makeText(this, R.string.map_saved_success, Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            Toast.makeText(this, "Ошибка сохранения изображения: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            android.util.Log.e(TAG, "Failed to save custom map image", e);
+            Toast.makeText(this, R.string.error_save_image, Toast.LENGTH_SHORT).show();
         } finally {
             try {
                 if (is != null) is.close();
@@ -203,6 +226,10 @@ public class OperatorActivity extends Activity {
         File internalFile = new File(getFilesDir(), CUSTOM_MAP_FILENAME);
         if (internalFile.exists()) {
             internalFile.delete();
+        }
+        File legacyFile = new File(getFilesDir(), "custom_store_map.png");
+        if (legacyFile.exists()) {
+            legacyFile.delete();
         }
         loadStoreMap();
         Toast.makeText(this, R.string.map_reset_success, Toast.LENGTH_SHORT).show();

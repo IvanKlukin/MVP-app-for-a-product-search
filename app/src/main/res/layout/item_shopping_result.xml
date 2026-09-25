@@ -11,7 +11,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Название позиции"
+        android:text="@string/placeholder_item_name"
         android:textSize="15sp"
         android:textStyle="bold"
         android:textColor="@color/text_primary" />
@@ -20,7 +20,7 @@
         android:id="@+id/tvShoppingItemStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Статус"
+        android:text="@string/placeholder_item_status"
         android:textSize="13sp"
         android:textStyle="bold"
         android:textColor="@color/status_found" />

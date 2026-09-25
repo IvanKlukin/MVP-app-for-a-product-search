@@ -108,8 +108,36 @@ public class SearchActivity extends Activity {
         });
 
         loadStoreMap();
+        refreshCatalogData();
+        handleIntent(getIntent());
+    }
 
-        String queryExtra = getIntent().getStringExtra("query");
+    private void refreshCatalogData() {
+        allProducts = repository.getAllProducts();
+        List<Section> sections = repository.getAllSections();
+        storeMapViewSearch.setSections(sections);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        refreshCatalogData();
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        if (intent == null) return;
+        String selectExtra = intent.getStringExtra("select_product");
+        if (selectExtra != null && !selectExtra.trim().isEmpty()) {
+            for (Product p : allProducts) {
+                if (p.getName().equalsIgnoreCase(selectExtra.trim())) {
+                    selectProduct(p);
+                    return;
+                }
+            }
+        }
+        String queryExtra = intent.getStringExtra("query");
         if (queryExtra != null && !queryExtra.trim().isEmpty()) {
             etSearchQuery.setText(queryExtra);
             performSearch(queryExtra);
@@ -119,12 +147,10 @@ public class SearchActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        allProducts = repository.getAllProducts();
-        List<Section> sections = repository.getAllSections();
-        storeMapViewSearch.setSections(sections);
+        refreshCatalogData();
 
         String currentQuery = etSearchQuery.getText().toString();
-        if (!SearchNormalizer.isBlank(currentQuery)) {
+        if (!SearchNormalizer.isBlank(currentQuery) && lvSuggestions.getVisibility() == View.VISIBLE) {
             performSearch(currentQuery);
         }
     }
@@ -188,7 +214,7 @@ public class SearchActivity extends Activity {
             if (exact != null) {
                 highlightProductOnMap(exact);
             } else {
-                tvSearchStatus.setText("Найдено вариантов: " + matches.size() + ". Выберите подходящий товар:");
+                tvSearchStatus.setText(getString(R.string.search_multiple_found, matches.size()));
                 tvSearchStatus.setTextColor(getResources().getColor(R.color.text_primary));
                 // Подсвечиваем первый найденный вариант
                 storeMapViewSearch.setHighlightedSectionId(matches.get(0).getSectionId());
@@ -208,7 +234,7 @@ public class SearchActivity extends Activity {
 
     private void highlightProductOnMap(Product product) {
         storeMapViewSearch.setHighlightedSectionId(product.getSectionId());
-        String info = "Товар: " + product.getName() + "\nРаздел: " + product.getSectionName();
+        String info = getString(R.string.search_result_info, product.getName(), product.getSectionName());
         tvSearchStatus.setText(info);
         tvSearchStatus.setTextColor(getResources().getColor(R.color.primary_dark));
     }

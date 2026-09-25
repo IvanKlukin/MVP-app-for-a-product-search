@@ -70,6 +70,59 @@ public class MainActivity extends Activity {
                 handleClearData();
             }
         });
+
+        handleIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        if (intent == null) return;
+        String clip = intent.getStringExtra("set_clipboard");
+        if (clip != null) {
+            android.content.ClipboardManager cm = (android.content.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+            if (cm != null) {
+                cm.setPrimaryClip(android.content.ClipData.newPlainText("text", clip));
+            }
+        }
+
+        String openActivity = intent.getStringExtra("open_activity");
+        if ("operator".equals(openActivity)) {
+            Intent opIntent = new Intent(this, OperatorActivity.class);
+            if (intent.hasExtra("add_section_name")) {
+                opIntent.putExtra("add_section_name", intent.getStringExtra("add_section_name"));
+                opIntent.putExtra("add_section_x", intent.getFloatExtra("add_section_x", 0.22f));
+                opIntent.putExtra("add_section_y", intent.getFloatExtra("add_section_y", 0.38f));
+            }
+            startActivity(opIntent);
+        } else if ("search".equals(openActivity)) {
+            Intent sIntent = new Intent(this, SearchActivity.class);
+            if (intent.hasExtra("query")) {
+                sIntent.putExtra("query", intent.getStringExtra("query"));
+            }
+            if (intent.hasExtra("select_product")) {
+                sIntent.putExtra("select_product", intent.getStringExtra("select_product"));
+            }
+            startActivity(sIntent);
+        } else if ("shopping_list".equals(openActivity)) {
+            Intent shopIntent = new Intent(this, ShoppingListActivity.class);
+            if (intent.hasExtra("shopping_list")) {
+                shopIntent.putExtra("shopping_list", intent.getStringExtra("shopping_list"));
+            }
+            startActivity(shopIntent);
+        } else if ("import".equals(openActivity)) {
+            Intent impIntent = new Intent(this, ProductImportActivity.class);
+            if (intent.hasExtra("import_text")) {
+                impIntent.putExtra("import_text", intent.getStringExtra("import_text"));
+                impIntent.putExtra("auto_import", intent.getBooleanExtra("auto_import", false));
+            }
+            startActivity(impIntent);
+        }
     }
 
     @Override
@@ -90,7 +143,7 @@ public class MainActivity extends Activity {
         if (existingSections > 0) {
             new AlertDialog.Builder(this)
                     .setTitle(R.string.btn_demo_data)
-                    .setMessage("В базе уже имеются данные (" + existingSections + " разделов). Перезаписать демонстрационными данными?")
+                    .setMessage(getString(R.string.demo_overwrite_confirm, existingSections))
                     .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

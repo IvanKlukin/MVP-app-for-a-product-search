@@ -45,7 +45,8 @@
                 android:layout_weight="1"
                 android:text="@string/btn_choose_map"
                 android:textSize="12sp"
-                android:layout_marginRight="4dp" />
+                android:layout_marginRight="4dp"
+                android:layout_marginEnd="4dp" />
 
             <Button
                 android:id="@+id/btnResetMap"
@@ -54,7 +55,8 @@
                 android:layout_weight="1"
                 android:text="@string/btn_reset_map"
                 android:textSize="12sp"
-                android:layout_marginLeft="4dp" />
+                android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -69,7 +71,8 @@
                 android:layout_weight="1"
                 android:text="@string/btn_sections_list"
                 android:textSize="12sp"
-                android:layout_marginRight="4dp" />
+                android:layout_marginRight="4dp"
+                android:layout_marginEnd="4dp" />
 
             <Button
                 android:id="@+id/btnGoImport"
@@ -78,7 +81,8 @@
                 android:layout_weight="1"
                 android:text="@string/btn_go_import"
                 android:textSize="12sp"
-                android:layout_marginLeft="4dp" />
+                android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp" />
         </LinearLayout>
     </LinearLayout>
 

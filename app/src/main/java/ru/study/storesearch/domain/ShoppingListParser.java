@@ -93,8 +93,9 @@ public class ShoppingListParser {
         if (text == null || text.trim().isEmpty()) {
             return Collections.emptyList();
         }
-        // Разделение по Windows (\r\n) и Unix (\n)
-        String[] rawLines = text.split("\\r?\\n");
+        // Разделение по Windows (\r\n) и Unix (\n), с поддержкой экранированных \n
+        String normalized = text.contains("\n") ? text : text.replace("\\n", "\n");
+        String[] rawLines = normalized.split("\\r?\\n");
         List<String> result = new ArrayList<>();
 
         for (String raw : rawLines) {
